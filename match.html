@@ -17,12 +17,12 @@
         </section>
         <section id="server-selection" style="display: none;">
             <h3>Who is serving first?</h3>
-            <button id="player-serves-btn">My Sister</button>
+            <button id="player-serves-btn">My Player</button>
             <button id="opponent-serves-btn">Opponent</button>
         </section>
         <section id="point-tracking">
             <div class="player-column">
-                <h3>My Sister</h3>
+                <h3>My Player <span id="player-server-indicator" class="server-indicator" style="display: none;">🔴</span></h3>
                 <div class="point-buttons" id="player-points">
                     <button class="point-btn" data-player="player" data-outcome="winner">Winner</button>
                     <button class="point-btn" data-player="player" data-outcome="forced-error">Forced Error</button>
@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="player-column">
-                <h3>Opponent</h3>
+                <h3>Opponent <span id="opponent-server-indicator" class="server-indicator" style="display: none;">🔴</span></h3>
                 <div class="point-buttons" id="opponent-points">
                     <button class="point-btn" data-player="opponent" data-outcome="winner">Winner</button>
                     <button class="point-btn" data-player="opponent" data-outcome="forced-error">Forced Error</button>

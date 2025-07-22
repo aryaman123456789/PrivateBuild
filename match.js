@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const serverSelectionSection = document.getElementById('server-selection');
     const playerServesBtn = document.getElementById('player-serves-btn');
     const opponentServesBtn = document.getElementById('opponent-serves-btn');
+    const playerServerIndicator = document.getElementById('player-server-indicator');
+    const opponentServerIndicator = document.getElementById('opponent-server-indicator');
 
     let matches = JSON.parse(localStorage.getItem('matches')) || [];
     let match = matches.find(m => m.id === matchId);
@@ -53,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         match.server = server;
         serverSelectionSection.style.display = 'none';
         updateServeButtons();
+        updateServerIndicators();
         saveMatches();
     }
 
@@ -85,6 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (match.server === 'opponent') {
             playerServerOnlyButtons.forEach(btn => btn.style.display = 'none');
             opponentServerOnlyButtons.forEach(btn => btn.style.display = 'block');
+        }
+    }
+
+    function updateServerIndicators() {
+        if (match.server === 'player') {
+            playerServerIndicator.style.display = 'inline';
+            opponentServerIndicator.style.display = 'none';
+        } else if (match.server === 'opponent') {
+            playerServerIndicator.style.display = 'none';
+            opponentServerIndicator.style.display = 'inline';
         }
     }
 

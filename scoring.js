@@ -11,7 +11,7 @@ function calculateScore(points, format, scoringType, server) {
     const pointValues = ['0', '15', '30', '40'];
 
     for (const point of points) {
-        const playerWonPoint = (point.player === 'player' && (point.outcome === 'winner' || point.outcome === 'ace' || point.outcome === 'forced-error')) || (point.player === 'opponent' && (point.outcome === 'unforced-error' || point.outcome === 'double-fault'));
+        const playerWonPoint = (point.player === 'player' && (point.outcome === 'winner' || point.outcome === 'ace')) || (point.player === 'opponent' && (point.outcome === 'unforced-error' || point.outcome === 'double-fault' || point.outcome === 'forced-error'));
 
         if (isTiebreak) {
             if (playerWonPoint) {
