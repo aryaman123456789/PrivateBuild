@@ -19,8 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
         updateMatchInfo();
         updateScore();
 
-        if (!match.server) {
+        if (!match.initialServer) {
             serverSelectionSection.style.display = 'block';
+        } else {
+            updateServeButtons();
+            updateServerIndicators();
         }
 
         playerServesBtn.addEventListener('click', () => setServer('player'));
@@ -52,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setServer(server) {
+        match.initialServer = server;
         match.server = server;
         serverSelectionSection.style.display = 'none';
         updateServeButtons();
@@ -70,11 +74,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateScore() {
-        const score = calculateScore(match.points, match.format, match.scoring, match.server);
+        const score = calculateScore(match.points, match.format, match.scoring, match.initialServer);
         setScoreDisplay.textContent = score.sets;
         gameScoreDisplay.textContent = score.games;
         if (score.points) {
             gameScoreDisplay.textContent += `, ${score.points}`;
+        }
+        if (score.server && score.server !== match.server) {
+            match.server = score.server;
+            updateServeButtons();
+            updateServerIndicators();
+            saveMatches();
         }
     }
 

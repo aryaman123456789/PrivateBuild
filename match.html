@@ -24,21 +24,51 @@
             <div class="player-column">
                 <h3>My Player <span id="player-server-indicator" class="server-indicator" style="display: none;">🔴</span></h3>
                 <div class="point-buttons" id="player-points">
-                    <button class="point-btn" data-player="player" data-outcome="winner">Winner</button>
-                    <button class="point-btn" data-player="player" data-outcome="forced-error">Forced Error</button>
-                    <button class="point-btn" data-player="player" data-outcome="unforced-error">Unforced Error</button>
                     <button class="point-btn server-only" data-player="player" data-outcome="ace">Ace</button>
                     <button class="point-btn server-only" data-player="player" data-outcome="double-fault">Double Fault</button>
+                </div>
+                <div class="shot-type-column">
+                    <h4>Winners</h4>
+                    <button class="point-btn" data-player="player" data-outcome="fh-winner">Forehand</button>
+                    <button class="point-btn" data-player="player" data-outcome="bh-winner">Backhand</button>
+                    <button class="point-btn" data-player="player" data-outcome="v-winner">Volley</button>
+                </div>
+                <div class="shot-type-column">
+                    <h4>Forced Errors</h4>
+                    <button class="point-btn" data-player="player" data-outcome="fh-forced">Forehand</button>
+                    <button class="point-btn" data-player="player" data-outcome="bh-forced">Backhand</button>
+                    <button class="point-btn" data-player="player" data-outcome="v-forced">Volley</button>
+                </div>
+                <div class="shot-type-column">
+                    <h4>Unforced Errors</h4>
+                    <button class="point-btn" data-player="player" data-outcome="fh-unforced">Forehand</button>
+                    <button class="point-btn" data-player="player" data-outcome="bh-unforced">Backhand</button>
+                    <button class="point-btn" data-player="player" data-outcome="v-unforced">Volley</button>
                 </div>
             </div>
             <div class="player-column">
                 <h3>Opponent <span id="opponent-server-indicator" class="server-indicator" style="display: none;">🔴</span></h3>
                 <div class="point-buttons" id="opponent-points">
-                    <button class="point-btn" data-player="opponent" data-outcome="winner">Winner</button>
-                    <button class="point-btn" data-player="opponent" data-outcome="forced-error">Forced Error</button>
-                    <button class="point-btn" data-player="opponent" data-outcome="unforced-error">Unforced Error</button>
                     <button class="point-btn server-only" data-player="opponent" data-outcome="ace">Ace</button>
                     <button class="point-btn server-only" data-player="opponent" data-outcome="double-fault">Double Fault</button>
+                </div>
+                <div class="shot-type-column">
+                    <h4>Winners</h4>
+                    <button class="point-btn" data-player="opponent" data-outcome="fh-winner">Forehand</button>
+                    <button class="point-btn" data-player="opponent" data-outcome="bh-winner">Backhand</button>
+                    <button class="point-btn" data-player="opponent" data-outcome="v-winner">Volley</button>
+                </div>
+                <div class="shot-type-column">
+                    <h4>Forced Errors</h4>
+                    <button class="point-btn" data-player="opponent" data-outcome="fh-forced">Forehand</button>
+                    <button class="point-btn" data-player="opponent" data-outcome="bh-forced">Backhand</button>
+                    <button class="point-btn" data-player="opponent" data-outcome="v-forced">Volley</button>
+                </div>
+                <div class="shot-type-column">
+                    <h4>Unforced Errors</h4>
+                    <button class="point-btn" data-player="opponent" data-outcome="fh-unforced">Forehand</button>
+                    <button class="point-btn" data-player="opponent" data-outcome="bh-unforced">Backhand</button>
+                    <button class="point-btn" data-player="opponent" data-outcome="v-unforced">Volley</button>
                 </div>
             </div>
         </section>

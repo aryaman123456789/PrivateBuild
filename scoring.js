@@ -11,7 +11,11 @@ function calculateScore(points, format, scoringType, server) {
     const pointValues = ['0', '15', '30', '40'];
 
     for (const point of points) {
-        const playerWonPoint = (point.player === 'player' && (point.outcome === 'winner' || point.outcome === 'ace')) || (point.player === 'opponent' && (point.outcome === 'unforced-error' || point.outcome === 'double-fault' || point.outcome === 'forced-error'));
+        const playerWonPoint = (point.player === 'player' && point.outcome.includes('winner')) ||
+                               (point.player === 'player' && point.outcome === 'ace') ||
+                               (point.player === 'opponent' && point.outcome.includes('unforced')) ||
+                               (point.player === 'opponent' && point.outcome.includes('forced')) ||
+                               (point.player === 'opponent' && point.outcome === 'double-fault');
 
         if (isTiebreak) {
             if (playerWonPoint) {
@@ -61,16 +65,31 @@ function calculateScore(points, format, scoringType, server) {
             }
         }
 
-        if ((playerGames >= 6 && playerGames >= opponentGames + 2) || (format === 'pro-set-8-games' && playerGames === 8)) {
-            playerSets++;
-            playerGames = 0;
-            opponentGames = 0;
-        } else if ((opponentGames >= 6 && opponentGames >= playerGames + 2) || (format === 'pro-set-8-games' && opponentGames === 8)) {
-            opponentSets++;
-            playerGames = 0;
-            opponentGames = 0;
-        } else if (playerGames === 6 && opponentGames === 6 && format !== 'best-of-three-full-sets') {
-            isTiebreak = true;
+        if (format === 'pro-set-8-games') {
+            if (playerGames === 8 && opponentGames === 8) {
+                isTiebreak = true;
+            } else if (playerGames >= 8 && playerGames >= opponentGames + 2) {
+                playerSets++;
+                playerGames = 0;
+                opponentGames = 0;
+            } else if (opponentGames >= 8 && opponentGames >= playerGames + 2) {
+                opponentSets++;
+                playerGames = 0;
+                opponentGames = 0;
+            }
+        } else { 
+            const gamesToWin = format.includes('4-game') ? 4 : 6;
+            if (playerGames >= gamesToWin && playerGames >= opponentGames + 2) {
+                playerSets++;
+                playerGames = 0;
+                opponentGames = 0;
+            } else if (opponentGames >= gamesToWin && opponentGames >= playerGames + 2) {
+                opponentSets++;
+                playerGames = 0;
+                opponentGames = 0;
+            } else if (playerGames === gamesToWin && opponentGames === gamesToWin && format !== 'best-of-three-full-sets') {
+                isTiebreak = true;
+            }
         }
     }
 
@@ -94,17 +113,14 @@ function calculateScore(points, format, scoringType, server) {
                 pointsString = 'Ad-Out';
             }
         } else {
-            if (currentServer === 'player') {
-                pointsString = `${pointValues[playerPoints]}-${pointValues[opponentPoints]}`;
-            } else {
-                pointsString = `${pointValues[opponentPoints]}-${pointValues[playerPoints]}`;
-            }
+            pointsString = `${pointValues[playerPoints]}-${pointValues[opponentPoints]}`;
         }
     }
 
     return {
         sets: `${playerSets}-${opponentSets}`,
         games: `${playerGames}-${opponentGames}`,
-        points: pointsString
+        points: pointsString,
+        server: currentServer
     };
 }

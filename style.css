@@ -59,12 +59,30 @@ main {
 
 .player-column {
     width: 45%;
+    display: flex;
+    flex-direction: column;
 }
 
 .point-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.shot-type-column {
+    margin-bottom: 1rem;
+}
+
+.shot-type-column h4 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.shot-type-column .point-btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
 }
 
 .point-btn {
