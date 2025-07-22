@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Match</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Create New Match</h1>
+    </header>
+    <main>
+        <form id="new-match-form">
+            <label for="opponent-name">Opponent's Name:</label>
+            <input type="text" id="opponent-name" required>
+
+            <label for="match-date">Date:</label>
+            <input type="date" id="match-date" required>
+
+            <label for="match-location">Location:</label>
+            <input type="text" id="match-location" required>
+
+            <label for="match-type">Match Type:</label>
+            <select id="match-type" required>
+                <option value="singles">Singles</option>
+                <option value="doubles">Doubles</option>
+            </select>
+
+            <label for="match-format">Match Format:</label>
+            <select id="match-format" required>
+                <option value="best-of-three-tiebreak">Best of three with 10 pt tiebreak</option>
+                <option value="best-of-three-full-sets">Best of three full sets</option>
+                <option value="best-of-three-4-game-sets">Best of three 4 game sets</option>
+                <option value="pro-set-8-games">Pro set (8 games)</option>
+            </select>
+
+            <label for="scoring-type">Scoring:</label>
+            <select id="scoring-type" required>
+                <option value="ad">Ad</option>
+                <option value="no-ad">No-Ad</option>
+            </select>
+
+            <button type="submit">Start Match</button>
+        </form>
+    </main>
+    <script src="new-match.js"></script>
+</body>
+</html>

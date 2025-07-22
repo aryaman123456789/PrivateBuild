@@ -1,0 +1,105 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const matchId = urlParams.get('id');
+    const matchInfoSection = document.getElementById('match-info');
+    const pointButtons = document.querySelectorAll('.point-btn');
+    const undoBtn = document.getElementById('undo-btn');
+    const setScoreDisplay = document.getElementById('set-score');
+    const gameScoreDisplay = document.getElementById('game-score');
+    const serverSelectionSection = document.getElementById('server-selection');
+    const playerServesBtn = document.getElementById('player-serves-btn');
+    const opponentServesBtn = document.getElementById('opponent-serves-btn');
+
+    let matches = JSON.parse(localStorage.getItem('matches')) || [];
+    let match = matches.find(m => m.id === matchId);
+
+    if (match) {
+        updateMatchInfo();
+        updateScore();
+
+        if (!match.server) {
+            serverSelectionSection.style.display = 'block';
+        }
+
+        playerServesBtn.addEventListener('click', () => setServer('player'));
+        opponentServesBtn.addEventListener('click', () => setServer('opponent'));
+
+        pointButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                if (match.server) {
+                    const player = button.dataset.player;
+                    const outcome = button.dataset.outcome;
+                    addPoint(player, outcome);
+                } else {
+                    alert('Please select who is serving first.');
+                }
+            });
+        });
+
+        undoBtn.addEventListener('click', () => {
+            if (match.points.length > 0) {
+                match.points.pop();
+                updateScore();
+                saveMatches();
+            }
+        });
+
+    } else {
+        console.error('Match not found.');
+        window.location.href = 'index.html';
+    }
+
+    function setServer(server) {
+        match.server = server;
+        serverSelectionSection.style.display = 'none';
+        updateServeButtons();
+        saveMatches();
+    }
+
+    function addPoint(player, outcome) {
+        match.points.push({
+            player: player,
+            outcome: outcome,
+            timestamp: Date.now()
+        });
+        updateScore();
+        saveMatches();
+    }
+
+    function updateScore() {
+        const score = calculateScore(match.points, match.format, match.scoring, match.server);
+        setScoreDisplay.textContent = score.sets;
+        gameScoreDisplay.textContent = score.games;
+        if (score.points) {
+            gameScoreDisplay.textContent += `, ${score.points}`;
+        }
+    }
+
+    function updateServeButtons() {
+        const playerServerOnlyButtons = document.querySelectorAll('#player-points .server-only');
+        const opponentServerOnlyButtons = document.querySelectorAll('#opponent-points .server-only');
+
+        if (match.server === 'player') {
+            playerServerOnlyButtons.forEach(btn => btn.style.display = 'block');
+            opponentServerOnlyButtons.forEach(btn => btn.style.display = 'none');
+        } else if (match.server === 'opponent') {
+            playerServerOnlyButtons.forEach(btn => btn.style.display = 'none');
+            opponentServerOnlyButtons.forEach(btn => btn.style.display = 'block');
+        }
+    }
+
+    function saveMatches() {
+        localStorage.setItem('matches', JSON.stringify(matches));
+    }
+
+    function updateMatchInfo() {
+        matchInfoSection.innerHTML = `
+            <p><strong>Opponent:</strong> ${match.opponentName}</p>
+            <p><strong>Date:</strong> ${match.date}</p>
+            <p><strong>Location:</strong> ${match.location}</p>
+            <p><strong>Type:</strong> ${match.type}</p>
+            <p><strong>Format:</strong> ${match.format}</p>
+            <p><strong>Scoring:</strong> ${match.scoring}</p>
+        `;
+    }
+});
