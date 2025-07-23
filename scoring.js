@@ -58,22 +58,26 @@ function calculateScore(points, format, scoringType, server) {
                 opponentPoints++;
             }
 
-            if (playerPoints >= 4 && playerPoints >= opponentPoints + 2) {
-                playerGames++;
-                playerPoints = 0;
-                opponentPoints = 0;
-                currentServer = currentServer === 'player' ? 'opponent' : 'player';
-            } else if (opponentPoints >= 4 && opponentPoints >= playerPoints + 2) {
-                opponentGames++;
-                playerPoints = 0;
-                opponentPoints = 0;
-                currentServer = currentServer === 'player' ? 'opponent' : 'player';
-            } else if (scoringType === 'no-ad' && playerPoints === 4 && opponentPoints === 4) {
-                if (playerWonPoint) {
+            let gameWon = false;
+            if (scoringType === 'ad') {
+                if (playerPoints >= 4 && playerPoints >= opponentPoints + 2) {
                     playerGames++;
-                } else {
+                    gameWon = true;
+                } else if (opponentPoints >= 4 && opponentPoints >= playerPoints + 2) {
                     opponentGames++;
+                    gameWon = true;
                 }
+            } else { // no-ad
+                if (playerPoints >= 4) {
+                    playerGames++;
+                    gameWon = true;
+                } else if (opponentPoints >= 4) {
+                    opponentGames++;
+                    gameWon = true;
+                }
+            }
+
+            if (gameWon) {
                 playerPoints = 0;
                 opponentPoints = 0;
                 currentServer = currentServer === 'player' ? 'opponent' : 'player';
@@ -122,10 +126,13 @@ function calculateScore(points, format, scoringType, server) {
         if (scoringType === 'ad' && playerPoints >= 3 && opponentPoints >= 3) {
             if (playerPoints === opponentPoints) {
                 pointsString = 'Deuce';
-            } else if (playerPoints > opponentPoints) {
-                pointsString = 'Ad-In';
             } else {
-                pointsString = 'Ad-Out';
+                const serverHasAdvantage = (currentServer === 'player' && playerPoints > opponentPoints) || (currentServer === 'opponent' && opponentPoints > playerPoints);
+                if (serverHasAdvantage) {
+                    pointsString = 'Ad-In';
+                } else {
+                    pointsString = 'Ad-Out';
+                }
             }
         } else {
             pointsString = `${pointValues[playerPoints]}-${pointValues[opponentPoints]}`;
