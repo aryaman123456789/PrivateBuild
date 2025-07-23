@@ -18,24 +18,39 @@ function calculateScore(points, format, scoringType, server) {
                                (point.player === 'opponent' && point.outcome === 'double-fault');
 
         if (isTiebreak) {
+            const tiebreakInitialServer = currentServer;
+
             if (playerWonPoint) {
                 playerPoints++;
             } else {
                 opponentPoints++;
             }
 
-            if ((playerPoints >= 7 && playerPoints >= opponentPoints + 2) || (format === 'best-of-three-tiebreak' && playerPoints === 10)) {
-                playerGames++;
-                playerPoints = 0;
-                opponentPoints = 0;
-                isTiebreak = false;
-            } else if ((opponentPoints >= 7 && opponentPoints >= playerPoints + 2) || (format === 'best-of-three-tiebreak' && opponentPoints === 10)) {
-                opponentGames++;
-                playerPoints = 0;
-                opponentPoints = 0;
-                isTiebreak = false;
-            }
+            const isMatchTiebreak = format === 'best-of-three-tiebreak' && playerSets === 1 && opponentSets === 1;
+            const tiebreakPointsToWin = isMatchTiebreak ? 10 : 7;
 
+            const playerWinsTiebreak = playerPoints >= tiebreakPointsToWin && playerPoints >= opponentPoints + 2;
+            const opponentWinsTiebreak = opponentPoints >= tiebreakPointsToWin && opponentPoints >= playerPoints + 2;
+
+            if (playerWinsTiebreak || opponentWinsTiebreak) {
+                if (playerWinsTiebreak) {
+                    playerGames++;
+                } else {
+                    opponentGames++;
+                }
+                playerPoints = 0;
+                opponentPoints = 0;
+                isTiebreak = false;
+                currentServer = tiebreakInitialServer === 'player' ? 'opponent' : 'player';
+            } else {
+                const totalTiebreakPoints = playerPoints + opponentPoints;
+                const pointInCycle = totalTiebreakPoints % 4;
+                if (pointInCycle === 1 || pointInCycle === 2) {
+                    currentServer = tiebreakInitialServer === 'player' ? 'opponent' : 'player';
+                } else {
+                    currentServer = tiebreakInitialServer;
+                }
+            }
         } else {
             if (playerWonPoint) {
                 playerPoints++;
