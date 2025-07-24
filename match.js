@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let match = matches.find(m => m.id === matchId);
 
     if (match) {
-        updateMatchInfo();
         updateScore();
 
         if (!match.initialServer) {
@@ -127,16 +126,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveMatches() {
         localStorage.setItem('matches', JSON.stringify(matches));
-    }
-
-    function updateMatchInfo() {
-        matchInfoSection.innerHTML = `
-            <p><strong>Opponent:</strong> ${match.opponentName}</p>
-            <p><strong>Date:</strong> ${match.date}</p>
-            <p><strong>Location:</strong> ${match.location}</p>
-            <p><strong>Type:</strong> ${match.type}</p>
-            <p><strong>Format:</strong> ${match.format}</p>
-            <p><strong>Scoring:</strong> ${match.scoring}</p>
-        `;
     }
 });
