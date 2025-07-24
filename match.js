@@ -75,11 +75,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateScore() {
         const score = calculateScore(match.points, match.format, match.scoring, match.initialServer);
-        setScoreDisplay.textContent = score.sets;
-        gameScoreDisplay.textContent = score.games;
-        if (score.points) {
-            gameScoreDisplay.textContent += `, ${score.points}`;
+        
+        if (match.format === 'pro-set-8-games') {
+            setScoreDisplay.textContent = score.sets;
+            gameScoreDisplay.textContent = score.games;
+            setScoreDisplay.classList.add('pro-set-score');
+            gameScoreDisplay.style.display = 'none';
+        } else {
+            let setScores = score.sets;
+            if (setScores) {
+                setScores += ` ${score.games}`;
+            } else {
+                setScores = score.games;
+            }
+            setScoreDisplay.textContent = setScores;
+            gameScoreDisplay.textContent = score.points;
+            setScoreDisplay.classList.remove('pro-set-score');
+            gameScoreDisplay.style.display = 'block';
         }
+
         if (score.server && score.server !== match.server) {
             match.server = score.server;
             updateServeButtons();

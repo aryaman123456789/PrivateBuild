@@ -51,6 +51,11 @@ main {
     margin: 0;
 }
 
+.pro-set-score {
+    font-size: 6rem !important;
+    font-weight: bold;
+}
+
 #point-tracking {
     display: flex;
     justify-content: space-around;

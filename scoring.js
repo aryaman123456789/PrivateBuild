@@ -3,6 +3,7 @@ function calculateScore(points, format, scoringType, server) {
     let opponentPoints = 0;
     let playerGames = 0;
     let opponentGames = 0;
+    let completedSets = [];
     let playerSets = 0;
     let opponentSets = 0;
     let currentServer = server;
@@ -89,21 +90,21 @@ function calculateScore(points, format, scoringType, server) {
                 isTiebreak = true;
             } else if (playerGames >= 8 && playerGames >= opponentGames + 2) {
                 playerSets++;
-                playerGames = 0;
-                opponentGames = 0;
             } else if (opponentGames >= 8 && opponentGames >= playerGames + 2) {
                 opponentSets++;
-                playerGames = 0;
-                opponentGames = 0;
             }
-        } else { 
+        } else {
             const gamesToWin = format.includes('4-game') ? 4 : 6;
-            if (playerGames >= gamesToWin && playerGames >= opponentGames + 2) {
-                playerSets++;
-                playerGames = 0;
-                opponentGames = 0;
-            } else if (opponentGames >= gamesToWin && opponentGames >= playerGames + 2) {
-                opponentSets++;
+            const playerWonSet = playerGames >= gamesToWin && playerGames >= opponentGames + 2;
+            const opponentWonSet = opponentGames >= gamesToWin && opponentGames >= playerGames + 2;
+
+            if (playerWonSet || opponentWonSet) {
+                if (playerWonSet) {
+                    playerSets++;
+                } else {
+                    opponentSets++;
+                }
+                completedSets.push({ player: playerGames, opponent: opponentGames });
                 playerGames = 0;
                 opponentGames = 0;
             } else if (playerGames === gamesToWin && opponentGames === gamesToWin && format !== 'best-of-three-full-sets') {
@@ -113,12 +114,22 @@ function calculateScore(points, format, scoringType, server) {
     }
 
     const setsToWin = format.includes('best-of-three') ? 2 : 1;
-    if (playerSets >= setsToWin) {
-        return { sets: "Match Over: Player Wins!", games: "", points: "" };
-    } else if (opponentSets >= setsToWin) {
-        return { sets: "Match Over: Opponent Wins!", games: "", points: "" };
+    if (playerSets >= setsToWin || opponentSets >= setsToWin) {
+        const winner = playerSets >= setsToWin ? "Player" : "Opponent";
+        return { sets: `Match Over: ${winner} Wins!`, games: "", points: "" };
     }
 
+    if (format === 'pro-set-8-games') {
+        return {
+            sets: `${playerGames}-${opponentGames}`,
+            games: isTiebreak ? `${playerPoints}-${opponentPoints}` : `${pointValues[playerPoints]}-${pointValues[opponentPoints]}`,
+            points: '',
+            server: currentServer
+        };
+    }
+
+    let setsString = completedSets.map(set => `${set.player}-${set.opponent}`).join(' ');
+    
     let pointsString = '';
     if (isTiebreak) {
         pointsString = `${playerPoints}-${opponentPoints}`;
@@ -140,7 +151,7 @@ function calculateScore(points, format, scoringType, server) {
     }
 
     return {
-        sets: `${playerSets}-${opponentSets}`,
+        sets: setsString,
         games: `${playerGames}-${opponentGames}`,
         points: pointsString,
         server: currentServer
