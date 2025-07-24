@@ -130,3 +130,26 @@ main {
     font-size: 1.2rem;
     margin-top: 1rem;
 }
+
+#match-stats-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+}
+
+.player-column-stats {
+    width: 30%;
+    text-align: center;
+}
+
+.stats-labels-column {
+    width: 40%;
+    text-align: center;
+    color: #aaa;
+}
+
+#player-stats-data div, #opponent-stats-data div, #stats-labels-data div {
+    padding: 0.5rem;
+}

@@ -12,8 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const playerServerIndicator = document.getElementById('player-server-indicator');
     const opponentServerIndicator = document.getElementById('opponent-server-indicator');
 
-    let matches = JSON.parse(localStorage.getItem('matches')) || [];
-    let match = matches.find(m => m.id === matchId);
+    let match = JSON.parse(sessionStorage.getItem('activeMatch'));
+    if (!match || match.id !== matchId) {
+        let matches = JSON.parse(localStorage.getItem('matches')) || [];
+        match = matches.find(m => m.id === matchId);
+    }
 
     if (match) {
         updateScore();
@@ -75,11 +78,26 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateScore() {
         const score = calculateScore(match.points, match.format, match.scoring, match.initialServer);
         
+        if (score.isMatchOver) {
+            match.completed = true;
+            match.winner = score.winner;
+            match.finalScore = score.finalScore;
+            saveMatches();
+            alert(`Match Over! ${score.winner} wins!`);
+            window.location.href = 'index.html';
+            return;
+        }
+
         if (match.format === 'pro-set-8-games') {
             setScoreDisplay.textContent = score.sets;
-            gameScoreDisplay.textContent = score.games;
-            setScoreDisplay.classList.add('pro-set-score');
-            gameScoreDisplay.style.display = 'none';
+            if (score.isTiebreak) {
+                gameScoreDisplay.style.display = 'none';
+                setScoreDisplay.classList.add('pro-set-score');
+            } else {
+                gameScoreDisplay.textContent = score.games;
+                gameScoreDisplay.style.display = 'block';
+                setScoreDisplay.classList.remove('pro-set-score');
+            }
         } else {
             let setScores = score.sets;
             if (setScores) {
@@ -125,6 +143,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function saveMatches() {
-        localStorage.setItem('matches', JSON.stringify(matches));
+        if (match.completed) {
+            let matches = JSON.parse(localStorage.getItem('matches')) || [];
+            const existingMatchIndex = matches.findIndex(m => m.id === match.id);
+            if (existingMatchIndex > -1) {
+                matches[existingMatchIndex] = match;
+            } else {
+                matches.push(match);
+            }
+            localStorage.setItem('matches', JSON.stringify(matches));
+            sessionStorage.removeItem('activeMatch');
+        } else {
+            sessionStorage.setItem('activeMatch', JSON.stringify(match));
+        }
     }
 });

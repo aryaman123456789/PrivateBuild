@@ -15,12 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
             points: []
         };
 
-        // Save the new match to local storage
-        const matches = JSON.parse(localStorage.getItem('matches')) || [];
-        matches.push(newMatch);
-        localStorage.setItem('matches', JSON.stringify(matches));
+        // Save the new match to session storage
+        sessionStorage.setItem('activeMatch', JSON.stringify(newMatch));
 
-        // Redirect to the match page (which we'll create next)
+        // Redirect to the match page
         window.location.href = `match.html?id=${newMatch.id}`;
     });
 });

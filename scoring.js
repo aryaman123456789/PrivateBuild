@@ -147,23 +147,55 @@ function calculateScore(points, format, scoringType, server) {
 
     const setsToWin = format.includes('best-of-three') ? 2 : 1;
     if (playerSets >= setsToWin || opponentSets >= setsToWin) {
-        const winner = playerSets >= setsToWin ? "Player" : "Opponent";
-        let finalSetsString = completedSets.map(set => {
-            if (set.tiebreak !== null) {
-                return `${set.player}-${set.opponent}(${set.tiebreak})`;
+        const winner = playerSets >= setsToWin ? "player" : "opponent";
+        let finalSetsString;
+        if (format === 'pro-set-8-games') {
+            if (tiebreakLoserScore !== null) {
+                finalSetsString = `${playerGames}-${opponentGames}(${tiebreakLoserScore})`;
+            } else {
+                finalSetsString = `${playerGames}-${opponentGames}`;
             }
-            return `${set.player}-${set.opponent}`;
-        }).join(' ');
-        return { sets: `Match Over: ${winner} Wins! ${finalSetsString}`, games: "", points: "" };
+        } else {
+            finalSetsString = completedSets.map(set => {
+                if (set.tiebreak !== null) {
+                    return `${set.player}-${set.opponent}(${set.tiebreak})`;
+                }
+                return `${set.player}-${set.opponent}`;
+            }).join(' ');
+        }
+        
+        if (playerGames > 0 || opponentGames > 0) {
+            if(format !== 'pro-set-8-games')
+             finalSetsString += ` ${playerGames}-${opponentGames}`;
+        }
+
+        return {
+            isMatchOver: true,
+            winner: winner,
+            finalScore: finalSetsString,
+            sets: `Match Over: ${winner} Wins! ${finalSetsString}`, 
+            games: "", 
+            points: "" 
+        };
     }
 
     if (format === 'pro-set-8-games') {
-        return {
-            sets: `${playerGames}-${opponentGames}`,
-            games: isTiebreak ? `${playerPoints}-${opponentPoints}` : `${pointValues[playerPoints]}-${pointValues[opponentPoints]}`,
-            points: '',
-            server: currentServer
-        };
+        if (isTiebreak) {
+            return {
+                sets: `${playerGames}-${opponentGames} ${playerPoints}-${opponentPoints}`,
+                games: '',
+                points: '',
+                server: currentServer,
+                isTiebreak: true
+            };
+        } else {
+            return {
+                sets: `${playerGames}-${opponentGames}`,
+                games: `${pointValues[playerPoints]}-${pointValues[opponentPoints]}`,
+                points: '',
+                server: currentServer
+            };
+        }
     }
 
     let setsString = completedSets.map(set => {
@@ -180,13 +212,10 @@ function calculateScore(points, format, scoringType, server) {
         if (scoringType === 'ad' && playerPoints >= 3 && opponentPoints >= 3) {
             if (playerPoints === opponentPoints) {
                 pointsString = 'Deuce';
-            } else {
-                const serverHasAdvantage = (currentServer === 'player' && playerPoints > opponentPoints) || (currentServer === 'opponent' && opponentPoints > playerPoints);
-                if (serverHasAdvantage) {
-                    pointsString = 'Ad-In';
-                } else {
-                    pointsString = 'Ad-Out';
-                }
+            } else if (playerPoints > opponentPoints) {
+                pointsString = (currentServer === 'player') ? 'Ad-In' : 'Ad-Out';
+            } else { // opponentPoints > playerPoints
+                pointsString = (currentServer === 'opponent') ? 'Ad-In' : 'Ad-Out';
             }
         } else {
             pointsString = `${pointValues[playerPoints]}-${pointValues[opponentPoints]}`;

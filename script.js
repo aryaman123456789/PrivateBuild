@@ -2,18 +2,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const newMatchBtn = document.getElementById('new-match-btn');
     const matchList = document.getElementById('match-list');
 
-    // Load match history from local storage
-    const matches = JSON.parse(localStorage.getItem('matches')) || [];
-
     displayMatches();
 
     function displayMatches() {
         matchList.innerHTML = '';
-        const matches = JSON.parse(localStorage.getItem('matches')) || [];
-        matches.forEach((match, index) => {
+        const activeMatch = JSON.parse(sessionStorage.getItem('activeMatch'));
+        if (activeMatch) {
             const listItem = document.createElement('li');
             listItem.innerHTML = `
-                <span>Opponent: ${match.opponentName}, Date: ${match.date}, Location: ${match.location}</span>
+                <a href="match.html?id=${activeMatch.id}">
+                    <strong>Resume Match:</strong> Opponent: ${activeMatch.opponentName}
+                </a>
+            `;
+            matchList.appendChild(listItem);
+        }
+
+        const matches = JSON.parse(localStorage.getItem('matches')) || [];
+        matches.filter(m => m.completed).forEach((match, index) => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                <a href="match-stats.html?id=${match.id}">
+                    <span>Opponent: ${match.opponentName}, Score: ${match.finalScore}</span>
+                </a>
                 <button class="delete-btn" data-index="${index}">Delete</button>
             `;
             matchList.appendChild(listItem);
