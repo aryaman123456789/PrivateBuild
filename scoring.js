@@ -88,15 +88,15 @@ function calculateScore(points, format, scoringType, server) {
         if (format === 'pro-set-8-games') {
             if (playerGames === 8 && opponentGames === 8) {
                 isTiebreak = true;
-            } else if (playerGames >= 8 && playerGames >= opponentGames + 2) {
+            } else if ((playerGames >= 8 && playerGames >= opponentGames + 2) || (playerGames === 9 && opponentGames === 8)) {
                 playerSets++;
-            } else if (opponentGames >= 8 && opponentGames >= playerGames + 2) {
+            } else if ((opponentGames >= 8 && opponentGames >= playerGames + 2) || (opponentGames === 9 && playerGames === 8)) {
                 opponentSets++;
             }
         } else {
             const gamesToWin = format.includes('4-game') ? 4 : 6;
-            const playerWonSet = playerGames >= gamesToWin && playerGames >= opponentGames + 2;
-            const opponentWonSet = opponentGames >= gamesToWin && opponentGames >= playerGames + 2;
+            const playerWonSet = (playerGames >= gamesToWin && playerGames >= opponentGames + 2) || (playerGames === gamesToWin + 1 && opponentGames === gamesToWin);
+            const opponentWonSet = (opponentGames >= gamesToWin && opponentGames >= playerGames + 2) || (opponentGames === gamesToWin + 1 && playerGames === gamesToWin);
 
             if (playerWonSet || opponentWonSet) {
                 if (playerWonSet) {
