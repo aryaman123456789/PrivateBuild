@@ -142,12 +142,18 @@ main {
 .player-column-stats {
     width: 30%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .stats-labels-column {
     width: 40%;
     text-align: center;
     color: #aaa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #player-stats-data div, #opponent-stats-data div, #stats-labels-data div {
