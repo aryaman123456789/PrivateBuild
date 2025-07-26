@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const playerServerIndicator = document.getElementById('player-server-indicator');
     const opponentServerIndicator = document.getElementById('opponent-server-indicator');
 
+    let isFirstFault = false;
     let match = JSON.parse(sessionStorage.getItem('activeMatch'));
     if (!match || match.id !== matchId) {
         let matches = JSON.parse(localStorage.getItem('matches')) || [];
@@ -45,7 +46,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         undoBtn.addEventListener('click', () => {
             if (match.points.length > 0) {
-                match.points.pop();
+                const lastPoint = match.points.pop();
+                if (lastPoint.outcome === 'double-fault') {
+                    // If the last point was a double fault, the point before it must have been a fault.
+                    // So we need to remove the double fault, and the fault before it.
+                    // And set the state to isFirstFault = true
+                    if(match.points.length > 0 && match.points[match.points.length-1].outcome === 'fault') {
+                        match.points.pop();
+                        isFirstFault = true;
+                    }
+                } else if (lastPoint.outcome === 'fault') {
+                    isFirstFault = false;
+                }
                 updateScore();
                 saveMatches();
             }
@@ -66,17 +78,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function addPoint(player, outcome) {
-        match.points.push({
-            player: player,
-            outcome: outcome,
-            timestamp: Date.now()
-        });
-        updateScore();
+        if (outcome === 'fault') {
+            if (isFirstFault) {
+                // This is the second fault, so it's a double fault.
+                match.points.push({
+                    player: player,
+                    outcome: 'double-fault',
+                    timestamp: Date.now()
+                });
+                isFirstFault = false; // Reset for the next point
+                updateScore();
+            } else {
+                // This is the first fault.
+                isFirstFault = true;
+                match.points.push({
+                    player: player,
+                    outcome: 'fault',
+                    timestamp: Date.now()
+                });
+            }
+        } else {
+            // Any other event (winner, ace, error) resets the fault state.
+            isFirstFault = false;
+            match.points.push({
+                player: player,
+                outcome: outcome,
+                timestamp: Date.now()
+            });
+            updateScore();
+        }
         saveMatches();
     }
 
     function updateScore() {
-        const score = calculateScore(match.points, match.format, match.scoring, match.initialServer);
+        const filteredPoints = match.points.filter(p => p.outcome !== 'fault');
+        const score = calculateScore(filteredPoints, match.format, match.scoring, match.initialServer);
         
         if (score.isMatchOver) {
             match.completed = true;

@@ -46,6 +46,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+function getServersPerPoint(points, format, scoring, initialServer) {
+    const servers = [];
+    let server = initialServer;
+    const filteredPoints = points.filter(p => p.outcome !== 'fault');
+    for (let i = 0; i < filteredPoints.length; i++) {
+        servers.push(server);
+        const score = calculateScore(filteredPoints.slice(0, i + 1), format, scoring, initialServer);
+        server = score.server;
+    }
+    return servers;
+}
+
 function calculateAllStatistics(match) {
     const { points, format, scoring, initialServer } = match;
     let playerStats = {
@@ -65,7 +77,9 @@ function calculateAllStatistics(match) {
         'Max Points Won in a Row': 0, 'Service Points Won': 0, 'Service Games Won': 0
     };
 
-    let server = initialServer;
+    const servers = getServersPerPoint(points, format, scoring, initialServer);
+    let serverIndex = 0;
+
     let playerPointsInRow = 0;
     let opponentPointsInRow = 0;
     let playerGamesInRow = 0;
@@ -73,36 +87,42 @@ function calculateAllStatistics(match) {
 
     let lastPlayerGames = 0;
     let lastOpponentGames = 0;
-
+    
+    let isSecondServe = false;
     for (let i = 0; i < points.length; i++) {
         const point = points[i];
+
+        if (point.outcome === 'fault') {
+            isSecondServe = true;
+            continue;
+        }
+
+        const server = servers[serverIndex];
         const playerWon = (point.player === 'player' && (point.outcome.includes('winner') || point.outcome === 'ace')) || (point.player === 'opponent' && (point.outcome.includes('unforced') || point.outcome.includes('forced') || point.outcome === 'double-fault'));
+        const currentServerStats = server === 'player' ? playerStats : opponentStats;
 
-        // Point outcome stats
-        if (point.player === 'player') {
-            if (point.outcome === 'ace') playerStats['Aces']++;
-        } else {
-            if (point.outcome === 'double-fault') opponentStats['Double Faults']++;
-        }
-
-        // Service stats
-        if (server === 'player') {
-            playerStats['First Serves Total']++; // Simplified
-            if (point.outcome !== 'double-fault') {
-                playerStats['First Serves In']++;
-                if (playerWon) playerStats['First Serve Points Won']++;
+        if (isSecondServe) {
+            currentServerStats['Second Serves Total']++;
+            if (point.outcome === 'double-fault') {
+                currentServerStats['Double Faults']++;
             } else {
-                playerStats['Double Faults']++;
+                currentServerStats['Second Serves In']++;
+                if ((server === 'player' && playerWon) || (server === 'opponent' && !playerWon)) {
+                    currentServerStats['Second Serve Points Won']++;
+                }
             }
         } else {
-            opponentStats['First Serves Total']++; // Simplified
-            if (point.outcome !== 'double-fault') {
-                opponentStats['First Serves In']++;
-                if (!playerWon) opponentStats['First Serve Points Won']++;
-            } else {
-                opponentStats['Double Faults']++;
+            currentServerStats['First Serves Total']++;
+            currentServerStats['First Serves In']++;
+            if (point.outcome === 'ace') {
+                currentServerStats['Aces']++;
+            }
+            if ((server === 'player' && playerWon) || (server === 'opponent' && !playerWon)) {
+                currentServerStats['First Serve Points Won']++;
             }
         }
+
+        isSecondServe = false;
 
         if (playerWon) {
             playerStats['Total Points Won']++;
@@ -121,7 +141,7 @@ function calculateAllStatistics(match) {
         playerStats['Max Points Won in a Row'] = Math.max(playerStats['Max Points Won in a Row'], playerPointsInRow);
         opponentStats['Max Points Won in a Row'] = Math.max(opponentStats['Max Points Won in a Row'], opponentPointsInRow);
 
-        const score = calculateScore(points.slice(0, i + 1), format, scoring, initialServer);
+        const score = calculateScore(points.filter(p => p.outcome !== 'fault').slice(0, serverIndex + 1), format, scoring, initialServer);
         const currentGames = score.games.split('-').map(Number);
         const playerGames = isNaN(currentGames[0]) ? lastPlayerGames : currentGames[0];
         const opponentGames = isNaN(currentGames[1]) ? lastOpponentGames : currentGames[1];
@@ -141,13 +161,10 @@ function calculateAllStatistics(match) {
 
         lastPlayerGames = playerGames;
         lastOpponentGames = opponentGames;
-
-        if (score.server !== server) {
-            server = score.server;
-        }
+        serverIndex++;
     }
 
-    const finalScore = calculateScore(points, format, scoring, initialServer);
+    const finalScore = calculateScore(points.filter(p => p.outcome !== 'fault'), format, scoring, initialServer);
     if (finalScore.isMatchOver) {
         const sets = finalScore.finalScore.split(' ');
         let playerTotalGames = 0;
@@ -170,12 +187,23 @@ function calculateAllStatistics(match) {
     opponentStats['First Serve %'] = opponentStats['First Serves Total'] > 0 ? `${Math.round((opponentStats['First Serves In'] / opponentStats['First Serves Total']) * 100)}%` : '0%';
     playerStats['Win % on 1st Serve'] = playerStats['First Serves In'] > 0 ? `${Math.round((playerStats['First Serve Points Won'] / playerStats['First Serves In']) * 100)}%` : '0%';
     opponentStats['Win % on 1st Serve'] = opponentStats['First Serves In'] > 0 ? `${Math.round((opponentStats['First Serve Points Won'] / opponentStats['First Serves In']) * 100)}%` : '0%';
-    playerStats['Win % on 2nd Serve'] = playerStats['Second Serves Total'] > 0 ? `${Math.round((playerStats['Second Serve Points Won'] / playerStats['Second Serves Total']) * 100)}%` : '0%';
-    opponentStats['Win % on 2nd Serve'] = opponentStats['Second Serves Total'] > 0 ? `${Math.round((opponentStats['Second Serve Points Won'] / opponentStats['Second Serves Total']) * 100)}%` : '0%';
+    playerStats['Win % on 2nd Serve'] = playerStats['Second Serves In'] > 0 ? `${Math.round((playerStats['Second Serve Points Won'] / playerStats['Second Serves In']) * 100)}%` : '0%';
+    opponentStats['Win % on 2nd Serve'] = opponentStats['Second Serves In'] > 0 ? `${Math.round((opponentStats['Second Serve Points Won'] / opponentStats['Second Serves In']) * 100)}%` : '0%';
     playerStats['Break Points Won'] = playerStats['Break Points Opportunities'] > 0 ? `${playerStats['Break Points Won']}/${playerStats['Break Points Opportunities']}` : '0/0';
     opponentStats['Break Points Won'] = opponentStats['Break Points Opportunities'] > 0 ? `${opponentStats['Break Points Won']}/${opponentStats['Break Points Opportunities']}` : '0/0';
     playerStats['Points Won'] = playerStats['Total Points Won'];
     opponentStats['Points Won'] = opponentStats['Total Points Won'];
+
+    for (const stat in playerStats) {
+        if (typeof playerStats[stat] === 'number' && playerStats[stat] < 0) {
+            playerStats[stat] = 0;
+        }
+    }
+    for (const stat in opponentStats) {
+        if (typeof opponentStats[stat] === 'number' && opponentStats[stat] < 0) {
+            opponentStats[stat] = 0;
+        }
+    }
 
     return { player: playerStats, opponent: opponentStats };
 }
