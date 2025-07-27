@@ -10,9 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (activeMatch) {
             const listItem = document.createElement('li');
             listItem.innerHTML = `
-                <a href="match.html?id=${activeMatch.id}">
+                <a href="match.html?id=${activeMatch.id}" class="match-link">
                     <strong>Resume Match:</strong> Opponent: ${activeMatch.opponentName}
                 </a>
+                <button class="delete-btn" data-active="true">Delete</button>
             `;
             matchList.appendChild(listItem);
         }
@@ -21,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         matches.filter(m => m.completed).forEach((match, index) => {
             const listItem = document.createElement('li');
             listItem.innerHTML = `
-                <a href="match-stats.html?id=${match.id}">
+                <a href="match-stats.html?id=${match.id}" class="match-link">
                     <span>Opponent: ${match.opponentName}, Score: ${match.finalScore}</span>
                 </a>
                 <button class="delete-btn" data-index="${index}">Delete</button>
@@ -31,8 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.querySelectorAll('.delete-btn').forEach(button => {
             button.addEventListener('click', (e) => {
-                const index = e.target.dataset.index;
-                deleteMatch(index);
+                if (e.target.dataset.active) {
+                    sessionStorage.removeItem('activeMatch');
+                    displayMatches();
+                } else {
+                    const index = e.target.dataset.index;
+                    deleteMatch(index);
+                }
             });
         });
     }

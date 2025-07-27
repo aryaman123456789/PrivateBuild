@@ -2,20 +2,21 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #006400; /* Dark Green */
-    color: #ffffff;
+    background-color: #f0f4f8; /* Light Blue-Gray */
+    color: #333;
 }
 
 header {
-    background-color: #004d00; /* Darker Green */
+    background-color: #4a90e2; /* Calmer Blue */
     color: #ffffff;
     padding: 1rem;
     text-align: center;
-    border-bottom: 2px solid #FFFF00; /* Tennis Ball Yellow */
+    border-bottom: 2px solid #7aa7c7; /* Lighter Blue */
 }
 
 main {
     padding: 1rem;
+    position: relative;
 }
 
 #match-history {
@@ -27,21 +28,45 @@ main {
     padding: 0;
 }
 
-#new-match-btn {
+.match-link {
     display: block;
-    width: 100%;
     padding: 1rem;
-    background-color: #FFFF00; /* Tennis Ball Yellow */
-    color: #000000;
+    margin-bottom: 0.5rem;
+    background-color: #ffffff;
+    color: #333;
+    text-decoration: none;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.match-link:hover {
+    background-color: #e9eef2;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#new-match-btn, .btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background-color: #4a90e2; /* Calmer Blue */
+    color: #ffffff;
     border: none;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1.2rem;
     font-weight: bold;
+    text-decoration: none;
+    text-align: center;
     transition: background-color 0.3s;
 }
 
-#new-match-btn:hover {
-    background-color: #e6e600;
+#new-match-btn:hover, .btn:hover {
+    background-color: #357abd; /* Darker Blue */
+}
+
+#new-match-btn {
+    width: 100%;
+    padding: 1rem;
 }
 
 #score-display {
@@ -53,12 +78,13 @@ main {
     font-size: 5rem;
     margin: 0;
     font-weight: bold;
+    color: #333;
 }
 
 #game-score {
     font-size: 3rem;
     margin: 0;
-    color: #FFFF00; /* Tennis Ball Yellow */
+    color: #4a90e2; /* Calmer Blue */
 }
 
 .pro-set-score {
@@ -76,9 +102,10 @@ main {
     width: 45%;
     display: flex;
     flex-direction: column;
-    background-color: #004d00; /* Darker Green */
+    background-color: #ffffff;
     padding: 1rem;
     border-radius: 8px;
+    border: 1px solid #ddd;
 }
 
 .point-buttons {
@@ -96,7 +123,7 @@ main {
     margin-top: 0;
     margin-bottom: 0.5rem;
     text-align: center;
-    color: #FFFF00; /* Tennis Ball Yellow */
+    color: #4a90e2; /* Calmer Blue */
 }
 
 .shot-type-column .point-btn {
@@ -107,36 +134,38 @@ main {
 .point-btn {
     padding: 1rem;
     font-size: 1.2rem;
-    border: 1px solid #FFFF00; /* Tennis Ball Yellow */
-    background-color: #006400; /* Dark Green */
-    color: #ffffff;
+    border: 1px solid #4a90e2; /* Calmer Blue */
+    background-color: #f0f4f8; /* Light Blue-Gray */
+    color: #333;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
 }
 
 .point-btn:hover {
-    background-color: #FFFF00; /* Tennis Ball Yellow */
-    color: #000000;
+    background-color: #4a90e2; /* Calmer Blue */
+    color: #ffffff;
 }
 
 #undo-btn {
     display: block;
     width: 100%;
     padding: 1rem;
-    background-color: #333;
+    background-color: #6c757d; /* Gray */
     color: white;
     border: none;
     cursor: pointer;
     font-size: 1.2rem;
     margin-top: 1rem;
+    border-radius: 8px;
 }
 
 #match-stats-container {
     display: flex;
     justify-content: space-between;
     padding: 2rem;
-    background-color: #1a1a1a;
+    background-color: #ffffff;
     border-radius: 8px;
+    border: 1px solid #ddd;
 }
 
 .player-column-stats {
@@ -150,7 +179,7 @@ main {
 .stats-labels-column {
     width: 40%;
     text-align: center;
-    color: #aaa;
+    color: #666;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -158,4 +187,10 @@ main {
 
 #player-stats-data div, #opponent-stats-data div, #stats-labels-data div {
     padding: 0.5rem;
+}
+
+.top-right-link {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
 }
