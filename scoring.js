@@ -229,3 +229,28 @@ function calculateScore(points, format, scoringType, server) {
         server: currentServer
     };
 }
+
+function getAIAnalysis(points, stats) {
+    const prompt = `
+        The following is a summary of a tennis match.
+
+        Match Statistics:
+        ${JSON.stringify(stats, null, 2)}
+
+        Point-by-Point Data:
+        ${JSON.stringify(points, null, 2)}
+
+        Please provide an analysis of the match, including:
+        1. What went well for the player.
+        2. What didn't go well for the player.
+        3. Tips and advice for improvement, as a professional tennis coach would give.
+    `;
+
+    // In a real application, you would send this prompt to an LLM API.
+    // For this example, we'll return a hardcoded response.
+    return {
+        wentWell: "Your first serve was very effective, winning you many free points.",
+        didNotGoWell: "You struggled with unforced errors on your backhand, especially under pressure.",
+        tips: "Focus on your footwork during backhand rallies. Try to stay lower and watch the ball onto the strings to reduce unforced errors. Consider using more slice backhands to reset the point when you're on the defensive."
+    };
+}

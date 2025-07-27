@@ -47,6 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
             statsLabelsData.appendChild(labelElement);
         });
 
+        const aiAnalysis = getAIAnalysis(match.points, stats);
+        document.getElementById('ai-went-well').textContent = aiAnalysis.wentWell;
+        document.getElementById('ai-did-not-go-well').textContent = aiAnalysis.didNotGoWell;
+        document.getElementById('ai-tips').textContent = aiAnalysis.tips;
+
     } else {
         console.error('Match not found.');
         window.location.href = 'index.html';
