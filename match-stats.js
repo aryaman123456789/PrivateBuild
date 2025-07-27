@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const statOrder = [
             'Aces', 'Double Faults', 'First Serve %', 'Win % on 1st Serve', 'Win % on 2nd Serve',
+            'Winners', 'Forehand Winners', 'Backhand Winners', 'Volley Winners',
+            'Unforced Errors', 'Forehand Unforced', 'Backhand Unforced', 'Volley Unforced',
+            'Forced Errors', 'Forehand Forced', 'Backhand Forced', 'Volley Forced',
             'Break Points Won', 'Tiebreaks Won', 'Receiving Points Won', 'Points Won', 'Games Won',
             'Max Games Won in a Row', 'Max Points Won in a Row', 'Service Points Won', 'Service Games Won'
         ];
@@ -66,7 +69,10 @@ function calculateAllStatistics(match) {
         'Second Serve Points Won': 0, 'Break Points Saved': 0, 'Break Points Faced': 0,
         'Break Points Won': 0, 'Break Points Opportunities': 0, 'Receiving Points Won': 0,
         'Total Points Won': 0, 'Games Won': 0, 'Tiebreaks Won': 0, 'Max Games Won in a Row': 0,
-        'Max Points Won in a Row': 0, 'Service Points Won': 0, 'Service Games Won': 0
+        'Max Points Won in a Row': 0, 'Service Points Won': 0, 'Service Games Won': 0,
+        'Winners': 0, 'Forehand Winners': 0, 'Backhand Winners': 0, 'Volley Winners': 0,
+        'Unforced Errors': 0, 'Forehand Unforced': 0, 'Backhand Unforced': 0, 'Volley Unforced': 0,
+        'Forced Errors': 0, 'Forehand Forced': 0, 'Backhand Forced': 0, 'Volley Forced': 0
     };
     let opponentStats = {
         'Aces': 0, 'Double Faults': 0, 'First Serves In': 0, 'First Serves Total': 0,
@@ -74,7 +80,10 @@ function calculateAllStatistics(match) {
         'Second Serve Points Won': 0, 'Break Points Saved': 0, 'Break Points Faced': 0,
         'Break Points Won': 0, 'Break Points Opportunities': 0, 'Receiving Points Won': 0,
         'Total Points Won': 0, 'Games Won': 0, 'Tiebreaks Won': 0, 'Max Games Won in a Row': 0,
-        'Max Points Won in a Row': 0, 'Service Points Won': 0, 'Service Games Won': 0
+        'Max Points Won in a Row': 0, 'Service Points Won': 0, 'Service Games Won': 0,
+        'Winners': 0, 'Forehand Winners': 0, 'Backhand Winners': 0, 'Volley Winners': 0,
+        'Unforced Errors': 0, 'Forehand Unforced': 0, 'Backhand Unforced': 0, 'Volley Unforced': 0,
+        'Forced Errors': 0, 'Forehand Forced': 0, 'Backhand Forced': 0, 'Volley Forced': 0
     };
 
     const servers = getServersPerPoint(points, format, scoring, initialServer);
@@ -100,6 +109,24 @@ function calculateAllStatistics(match) {
         const server = servers[serverIndex];
         const playerWon = (point.player === 'player' && (point.outcome.includes('winner') || point.outcome === 'ace')) || (point.player === 'opponent' && (point.outcome.includes('unforced') || point.outcome.includes('forced') || point.outcome === 'double-fault'));
         const currentServerStats = server === 'player' ? playerStats : opponentStats;
+        const pointPlayerStats = point.player === 'player' ? playerStats : opponentStats;
+
+        if (point.outcome.includes('winner')) {
+            pointPlayerStats['Winners']++;
+            if (point.outcome.startsWith('fh')) pointPlayerStats['Forehand Winners']++;
+            else if (point.outcome.startsWith('bh')) pointPlayerStats['Backhand Winners']++;
+            else if (point.outcome.startsWith('v')) pointPlayerStats['Volley Winners']++;
+        } else if (point.outcome.includes('unforced')) {
+            pointPlayerStats['Unforced Errors']++;
+            if (point.outcome.startsWith('fh')) pointPlayerStats['Forehand Unforced']++;
+            else if (point.outcome.startsWith('bh')) pointPlayerStats['Backhand Unforced']++;
+            else if (point.outcome.startsWith('v')) pointPlayerStats['Volley Unforced']++;
+        } else if (point.outcome.includes('forced')) {
+            pointPlayerStats['Forced Errors']++;
+            if (point.outcome.startsWith('fh')) pointPlayerStats['Forehand Forced']++;
+            else if (point.outcome.startsWith('bh')) pointPlayerStats['Backhand Forced']++;
+            else if (point.outcome.startsWith('v')) pointPlayerStats['Volley Forced']++;
+        }
 
         if (isSecondServe) {
             currentServerStats['Second Serves Total']++;
