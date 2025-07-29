@@ -189,12 +189,6 @@ main {
     padding: 0.5rem;
 }
 
-.stat-row {
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
-}
-
 .top-right-link {
     position: absolute;
     top: 1rem;

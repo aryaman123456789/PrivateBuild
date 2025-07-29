@@ -32,18 +32,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const playerStatElement = document.createElement('div');
             playerStatElement.textContent = playerStatValue;
-            playerStatElement.classList.add('stat-row');
-            
+            playerStatsData.appendChild(playerStatElement);
+
             const opponentStatElement = document.createElement('div');
             opponentStatElement.textContent = opponentStatValue;
-            opponentStatElement.classList.add('stat-row');
+            opponentStatsData.appendChild(opponentStatElement);
 
             const labelElement = document.createElement('div');
             labelElement.textContent = statName;
-            labelElement.classList.add('stat-row');
-            
-            playerStatsData.appendChild(playerStatElement);
-            opponentStatsData.appendChild(opponentStatElement);
             statsLabelsData.appendChild(labelElement);
         });
 
