@@ -189,9 +189,21 @@ function calculateScore(points, format, scoringType, server) {
                 isTiebreak: true
             };
         } else {
+            let gamesString;
+            if (scoringType === 'ad' && playerPoints >= 3 && opponentPoints >= 3) {
+                if (playerPoints === opponentPoints) {
+                    gamesString = 'Deuce';
+                } else if (playerPoints > opponentPoints) {
+                    gamesString = (currentServer === 'player') ? 'Ad-In' : 'Ad-Out';
+                } else {
+                    gamesString = (currentServer === 'opponent') ? 'Ad-In' : 'Ad-Out';
+                }
+            } else {
+                gamesString = `${pointValues[playerPoints]}-${pointValues[opponentPoints]}`;
+            }
             return {
                 sets: `${playerGames}-${opponentGames}`,
-                games: `${pointValues[playerPoints]}-${pointValues[opponentPoints]}`,
+                games: gamesString,
                 points: '',
                 server: currentServer
             };
@@ -230,27 +242,27 @@ function calculateScore(points, format, scoringType, server) {
     };
 }
 
-function getAIAnalysis(points, stats) {
-    const prompt = `
-        The following is a summary of a tennis match.
+async function getAIAnalysis(points, stats) {
+    try {
+        const response = await fetch('/api/analyze', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ points, stats })
+        });
 
-        Match Statistics:
-        ${JSON.stringify(stats, null, 2)}
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-        Point-by-Point Data:
-        ${JSON.stringify(points, null, 2)}
-
-        Please provide an analysis of the match, including:
-        1. What went well for the player.
-        2. What didn't go well for the player.
-        3. Tips and advice for improvement, as a professional tennis coach would give.
-    `;
-
-    // In a real application, you would send this prompt to an LLM API.
-    // For this example, we'll return a hardcoded response.
-    return {
-        wentWell: "Your first serve was very effective, winning you many free points.",
-        didNotGoWell: "You struggled with unforced errors on your backhand, especially under pressure.",
-        tips: "Focus on your footwork during backhand rallies. Try to stay lower and watch the ball onto the strings to reduce unforced errors. Consider using more slice backhands to reset the point when you're on the defensive."
-    };
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching AI analysis:", error);
+        return {
+            wentWell: "Error fetching analysis.",
+            didNotGoWell: "Error fetching analysis.",
+            tips: "Error fetching analysis."
+        };
+    }
 }

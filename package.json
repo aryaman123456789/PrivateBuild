@@ -1,0 +1,25 @@
+{
+  "name": "privatebuild",
+  "version": "1.0.0",
+  "description": "This is a simple web application for tracking tennis matches. It allows you to record the outcome of each point and keeps track of the score.",
+  "main": "config.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aryaman123456789/PrivateBuild.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aryaman123456789/PrivateBuild/issues"
+  },
+  "homepage": "https://github.com/aryaman123456789/PrivateBuild#readme",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0"
+  }
+}

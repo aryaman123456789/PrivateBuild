@@ -43,16 +43,46 @@ document.addEventListener('DOMContentLoaded', () => {
             statsLabelsData.appendChild(labelElement);
         });
 
-        const aiAnalysis = getAIAnalysis(match.points, stats);
-        document.getElementById('ai-went-well').textContent = aiAnalysis.wentWell;
-        document.getElementById('ai-did-not-go-well').textContent = aiAnalysis.didNotGoWell;
-        document.getElementById('ai-tips').textContent = aiAnalysis.tips;
+        getAIAnalysis(match.points, stats).then(aiAnalysis => {
+            document.getElementById('ai-went-well').textContent = aiAnalysis.wentWell;
+            document.getElementById('ai-did-not-go-well').textContent = aiAnalysis.didNotGoWell;
+            document.getElementById('ai-tips').textContent = aiAnalysis.tips;
+        });
 
     } else {
         console.error('Match not found.');
         window.location.href = 'index.html';
     }
 });
+
+async function getAIAnalysis(points, stats) {
+    try {
+        const response = await fetch('/api/analyze', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ points, stats })
+        });
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Error fetching AI analysis:", errorText);
+            return {
+                wentWell: "Error fetching analysis.",
+                didNotGoWell: "Error fetching analysis.",
+                tips: "Error fetching analysis."
+            };
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching AI analysis:", error);
+        return {
+            wentWell: "Error fetching analysis.",
+            didNotGoWell: "Error fetching analysis.",
+            tips: "Error fetching analysis."
+        };
+    }
+}
 
 function getServersPerPoint(points, format, scoring, initialServer) {
     const servers = [];
