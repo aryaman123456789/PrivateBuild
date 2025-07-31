@@ -1,9 +1,17 @@
+/**
+ * @file This file contains the main script for the application.
+ * @author [Your Name]
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
     const newMatchBtn = document.getElementById('new-match-btn');
     const matchList = document.getElementById('match-list');
 
     displayMatches();
 
+    /**
+     * Displays the list of matches.
+     */
     function displayMatches() {
         matchList.innerHTML = '';
         const activeMatch = JSON.parse(sessionStorage.getItem('activeMatch'));
@@ -43,6 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /**
+     * Deletes a match from local storage.
+     * @param {number} index - The index of the match to delete.
+     */
     function deleteMatch(index) {
         let matches = JSON.parse(localStorage.getItem('matches')) || [];
         matches.splice(index, 1);

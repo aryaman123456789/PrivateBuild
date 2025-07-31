@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the logic for creating a new match.
+ * @author [Your Name]
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
     const newMatchForm = document.getElementById('new-match-form');
 

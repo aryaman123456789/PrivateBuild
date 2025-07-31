@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the logic for displaying match statistics.
+ * @author [Your Name]
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const matchId = urlParams.get('id');
@@ -55,6 +60,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+/**
+ * Fetches AI analysis for the match.
+ * @param {Array} points - The points played in the match.
+ * @param {Object} stats - The match statistics.
+ * @returns {Promise<Object>} A promise that resolves to the AI analysis.
+ */
 async function getAIAnalysis(points, stats) {
     try {
         const response = await fetch('/api/analyze', {
@@ -84,6 +95,14 @@ async function getAIAnalysis(points, stats) {
     }
 }
 
+/**
+ * Gets the server for each point in the match.
+ * @param {Array} points - The points played in the match.
+ * @param {string} format - The match format.
+ * @param {string} scoring - The scoring system.
+ * @param {string} initialServer - The initial server.
+ * @returns {Array} An array of servers for each point.
+ */
 function getServersPerPoint(points, format, scoring, initialServer) {
     const servers = [];
     let server = initialServer;
@@ -96,6 +115,11 @@ function getServersPerPoint(points, format, scoring, initialServer) {
     return servers;
 }
 
+/**
+ * Calculates all statistics for a match.
+ * @param {Object} match - The match object.
+ * @returns {Object} An object containing player and opponent statistics.
+ */
 function calculateAllStatistics(match) {
     const { points, format, scoring, initialServer } = match;
     let playerStats = {

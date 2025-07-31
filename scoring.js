@@ -1,3 +1,16 @@
+/**
+ * @file This file contains the logic for calculating the score of a tennis match.
+ * @author [Your Name]
+ */
+
+/**
+ * Calculates the score of a tennis match.
+ * @param {Array} points - An array of points played in the match.
+ * @param {string} format - The format of the match (e.g., 'best-of-three').
+ * @param {string} scoringType - The type of scoring (e.g., 'ad', 'no-ad').
+ * @param {string} server - The initial server of the match.
+ * @returns {Object} An object containing the current score of the match.
+ */
 function calculateScore(points, format, scoringType, server) {
     let playerPoints = 0;
     let opponentPoints = 0;
@@ -242,6 +255,12 @@ function calculateScore(points, format, scoringType, server) {
     };
 }
 
+/**
+ * Fetches AI analysis for the match from the server.
+ * @param {Array} points - The points played in the match.
+ * @param {Object} stats - The statistics of the match.
+ * @returns {Promise<Object>} A promise that resolves with the AI analysis.
+ */
 async function getAIAnalysis(points, stats) {
     try {
         const response = await fetch('/api/analyze', {

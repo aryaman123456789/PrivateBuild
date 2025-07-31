@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the server-side logic for the application.
+ * @author [Your Name]
+ */
+
 require('dotenv').config();
 const express = require('express');
 const app = express();
@@ -6,6 +11,13 @@ const port = 3000;
 app.use(express.json());
 app.use(express.static('.'));
 
+/**
+ * @route POST /api/analyze
+ * @group AI Analysis - Operations for AI-powered match analysis
+ * @param {object} request.body.required - The points and stats of the match.
+ * @returns {object} 200 - An object containing the AI analysis.
+ * @returns {Error}  500 - Server error
+ */
 app.post('/api/analyze', async (req, res) => {
     const { points, stats } = req.body;
 

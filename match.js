@@ -1,3 +1,8 @@
+/**
+ * @file This file contains the logic for an active tennis match.
+ * @author [Your Name]
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const matchId = urlParams.get('id');
@@ -68,6 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'index.html';
     }
 
+    /**
+     * Sets the server for the match.
+     * @param {string} server - The player who is serving ('player' or 'opponent').
+     */
     function setServer(server) {
         match.initialServer = server;
         match.server = server;
@@ -77,6 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
         saveMatches();
     }
 
+    /**
+     * Adds a point to the match.
+     * @param {string} player - The player who won the point ('player' or 'opponent').
+     * @param {string} outcome - The outcome of the point.
+     */
     function addPoint(player, outcome) {
         if (outcome === 'fault') {
             if (isFirstFault) {
@@ -110,6 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
         saveMatches();
     }
 
+    /**
+     * Updates the score display.
+     */
     function updateScore() {
         const filteredPoints = match.points.filter(p => p.outcome !== 'fault');
         const score = calculateScore(filteredPoints, match.format, match.scoring, match.initialServer);
@@ -155,6 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**
+     * Updates the serve buttons based on the current server.
+     */
     function updateServeButtons() {
         const playerServerOnlyButtons = document.querySelectorAll('#player-points .server-only');
         const opponentServerOnlyButtons = document.querySelectorAll('#opponent-points .server-only');
@@ -168,6 +188,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**
+     * Updates the server indicators based on the current server.
+     */
     function updateServerIndicators() {
         if (match.server === 'player') {
             playerServerIndicator.style.display = 'inline';
@@ -178,6 +201,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**
+     * Saves the match data to local or session storage.
+     */
     function saveMatches() {
         if (match.completed) {
             let matches = JSON.parse(localStorage.getItem('matches')) || [];
