@@ -8,25 +8,32 @@
 </head>
 <body>
     <header>
+        <!-- Heading for the new match creation page -->
         <h1>Create New Match</h1>
     </header>
     <main>
+        <!-- Form for inputting new match details -->
         <form id="new-match-form">
+            <!-- Input for opponent's name -->
             <label for="opponent-name">Opponent's Name:</label>
             <input type="text" id="opponent-name" required>
 
+            <!-- Input for the date of the match -->
             <label for="match-date">Date:</label>
             <input type="date" id="match-date" required>
 
+            <!-- Input for the location of the match -->
             <label for="match-location">Location:</label>
             <input type="text" id="match-location" required>
 
+            <!-- Dropdown for selecting match type (Singles/Doubles) -->
             <label for="match-type">Match Type:</label>
             <select id="match-type" required>
                 <option value="singles">Singles</option>
                 <option value="doubles">Doubles</option>
             </select>
 
+            <!-- Dropdown for selecting the match format -->
             <label for="match-format">Match Format:</label>
             <select id="match-format" required>
                 <option value="best-of-three-tiebreak">Best of three with 10 pt tiebreak</option>
@@ -35,12 +42,14 @@
                 <option value="pro-set-8-games">Pro set (8 games)</option>
             </select>
 
+            <!-- Dropdown for selecting the scoring type (Ad/No-Ad) -->
             <label for="scoring-type">Scoring:</label>
             <select id="scoring-type" required>
                 <option value="ad">Ad</option>
                 <option value="no-ad">No-Ad</option>
             </select>
 
+            <!-- Button to submit the form and start the match -->
             <button type="submit">Start Match</button>
         </form>
     </main>

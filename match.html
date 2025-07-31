@@ -8,37 +8,48 @@
 </head>
 <body>
     <header>
+        <!-- Heading for the match tracking page -->
         <h1>Match</h1>
     </header>
     <main>
+        <!-- Section to display the current score -->
         <section id="score-display">
+            <!-- Displays the set score, e.g., 1-0 -->
             <h1 id="set-score">0-0</h1>
+            <!-- Displays the game score, e.g., 30-15 -->
             <h2 id="game-score">0-0</h2>
         </section>
+        <!-- Section for selecting the first server, hidden by default -->
         <section id="server-selection" style="display: none;">
             <h3>Who is serving first?</h3>
             <button id="player-serves-btn">My Player</button>
             <button id="opponent-serves-btn">Opponent</button>
         </section>
+        <!-- Main section for tracking points -->
         <section id="point-tracking">
+            <!-- Column for the user's player -->
             <div class="player-column">
-                <h3>My Player <span id="player-server-indicator" class="server-indicator" style="display: none;">🔴</span></h3>
+                <h3>My Player <span id="player-server-indicator" class="server-indicator" style="display: none;">?</span></h3>
+                <!-- Buttons for server-specific actions -->
                 <div class="point-buttons" id="player-points">
                     <button class="point-btn server-only" data-player="player" data-outcome="ace">Ace</button>
                     <button class="point-btn server-only" data-player="player" data-outcome="fault">Fault</button>
                 </div>
+                <!-- Buttons for different types of winning shots -->
                 <div class="shot-type-column">
                     <h4>Winners</h4>
                     <button class="point-btn" data-player="player" data-outcome="fh-winner">Forehand</button>
                     <button class="point-btn" data-player="player" data-outcome="bh-winner">Backhand</button>
                     <button class="point-btn" data-player="player" data-outcome="v-winner">Volley</button>
                 </div>
+                <!-- Buttons for forced errors by the opponent -->
                 <div class="shot-type-column">
                     <h4>Forced Errors</h4>
                     <button class="point-btn" data-player="player" data-outcome="fh-forced">Forehand</button>
                     <button class="point-btn" data-player="player" data-outcome="bh-forced">Backhand</button>
                     <button class="point-btn" data-player="player" data-outcome="v-forced">Volley</button>
                 </div>
+                <!-- Buttons for the player's unforced errors -->
                 <div class="shot-type-column">
                     <h4>Unforced Errors</h4>
                     <button class="point-btn" data-player="player" data-outcome="fh-unforced">Forehand</button>
@@ -46,24 +57,29 @@
                     <button class="point-btn" data-player="player" data-outcome="v-unforced">Volley</button>
                 </div>
             </div>
+            <!-- Column for the opponent -->
             <div class="player-column">
-                <h3>Opponent <span id="opponent-server-indicator" class="server-indicator" style="display: none;">🔴</span></h3>
+                <h3>Opponent <span id="opponent-server-indicator" class="server-indicator" style="display: none;">?</span></h3>
+                <!-- Buttons for server-specific actions -->
                 <div class="point-buttons" id="opponent-points">
                     <button class="point-btn server-only" data-player="opponent" data-outcome="ace">Ace</button>
                     <button class="point-btn server-only" data-player="opponent" data-outcome="fault">Fault</button>
                 </div>
+                <!-- Buttons for different types of winning shots -->
                 <div class="shot-type-column">
                     <h4>Winners</h4>
                     <button class="point-btn" data-player="opponent" data-outcome="fh-winner">Forehand</button>
                     <button class="point-btn" data-player="opponent" data-outcome="bh-winner">Backhand</button>
                     <button class="point-btn" data-player="opponent" data-outcome="v-winner">Volley</button>
                 </div>
+                <!-- Buttons for forced errors by the player -->
                 <div class="shot-type-column">
                     <h4>Forced Errors</h4>
                     <button class="point-btn" data-player="opponent" data-outcome="fh-forced">Forehand</button>
                     <button class="point-btn" data-player="opponent" data-outcome="bh-forced">Backhand</button>
                     <button class="point-btn" data-player="opponent" data-outcome="v-forced">Volley</button>
                 </div>
+                <!-- Buttons for the opponent's unforced errors -->
                 <div class="shot-type-column">
                     <h4>Unforced Errors</h4>
                     <button class="point-btn" data-player="opponent" data-outcome="fh-unforced">Forehand</button>
@@ -72,7 +88,9 @@
                 </div>
             </div>
         </section>
+        <!-- Button to undo the last point entry -->
         <button id="undo-btn">Undo</button>
+        <!-- Section for displaying additional match information -->
         <section id="match-info">
             <!-- Match info will be dynamically populated here -->
         </section>
